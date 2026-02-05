@@ -1,71 +1,144 @@
-# Question 1 – Commands and Explanations
+# Question 1 – Script Creation and Testing
 
-## Script setup
+## Step 1: Creating the script file
 
-text
-Command:
+```bash
 touch analyze.sh
+```
 
-Explanation:
-This command creates an empty file named analyze.sh which will store my shell script for Question 1.
+**Explanation:**
+I created an empty **script** file named `analyze.sh` in the current directory so that I can write my Bash code inside it.
 
-text
-Command:
+---
+
+## Step 2: Making the script executable
+
+```bash
 chmod +x analyze.sh
+```
 
-Explanation:
-Here I give execute permission to analyze.sh so that I can run it as a shell script.
+**Explanation:**
+I changed the file permissions of `analyze.sh` to make it **executable**, so that it can be run directly from the terminal using `./analyze.sh`.
 
-## Test data creation
+---
 
-text
-Command:
-echo -e "hello world\nthis is a test file" > sample.txt
+## Step 3: Editing the script with nano
 
-Explanation:
-This creates a sample text file with two lines of text. I will use this file to test the file analysis part of my script.
+```bash
+nano analyze.sh
+```
 
-text
-Command:
-mkdir testdir
+**Explanation:**
+I opened the `analyze.sh` file in the **nano** text editor to write the Bash script that will analyze files and directories.
 
-Explanation:
-This makes a directory called testdir that I will use to test the directory analysis part of the script.
+---
 
-text
-Command:
-touch testdir/a.txt testdir/b.txt testdir/c.c
+## Step 4: Script code – argument validation
 
-Explanation:
-Here I create three files inside testdir, including two .txt files and one .c file, so the script can count total files and .txt files.
+```bash
+#!/bin/bash
 
-## Script execution commands
+# Check if exactly one argument is provided
+if [ $# -ne 1 ]; then
+    echo "Error: Provide exactly one argument."
+    exit 1
+fi
+```
 
-text
-Command:
+**Explanation:**
+I started the script with the Bash **shebang** so it runs with `/bin/bash`. Then I checked the number of arguments using `#$`. If it is not exactly one, the script prints an error message and exits with status `1`.
+
+---
+
+## Step 5: Script code – handling a regular file
+
+```bash
+# If the argument is a regular file
+if [ -f "$1" ]; then
+    echo "File analysis:"
+    # Show number of lines, words and characters in the file
+    wc "$1"
+```
+
+**Explanation:**
+Here I checked if the argument is a **regular file** using `-f "$1"`. If true, the script prints a heading and uses the `wc` command to display the number of lines, words, and characters of that file.
+
+---
+
+## Step 6: Script code – handling a directory
+
+```bash
+# If the argument is a directory
+elif [ -d "$1" ]; then
+    echo "Directory analysis:"
+    # Count all files inside the directory
+    echo "Total files: $(find "$1" -type f | wc -l)"
+    # Count only .txt files inside the directory
+    echo "Text files: $(find "$1" -type f -name "*.txt" | wc -l)"
+```
+
+**Explanation:**
+If the argument is not a file, I check whether it is a **directory** using `-d "$1"`. For a directory, I first count all regular files inside it using `find` piped to `wc -l`, then I count only `.txt` files using `find` with `-name "*.txt"` and again `wc -l`.
+
+---
+
+## Step 7: Script code – invalid path
+
+```bash
+# If it is neither a file nor a directory
+else
+    echo "Error: Path does not exist."
+    exit 1
+fi
+```
+
+**Explanation:**
+If the argument is neither a file nor a directory, the script prints an error message saying that the path does not exist and exits with status `1` to indicate failure.
+
+---
+
+## Step 8: Testing with no arguments
+
+```bash
 ./analyze.sh
+```
 
-Explanation:
-I ran the script without any arguments. The script checks the number of arguments and prints an error because it requires exactly one file or directory path.
+**Observation/Explanation:**
+I ran the script without any arguments to test the validation. The script displayed `Error: Provide exactly one argument.` and exited, which confirms that the argument-count check is working correctly.
 
-text
-Command:
+---
+
+## Step 9: Testing with a regular file
+
+```bash
+echo -e "hello world\nthis is a test file" > sample.txt
 ./analyze.sh sample.txt
+```
 
-Explanation:
-I passed sample.txt as the argument. The script detects it as a regular file using -f and uses wc to display the number of lines, words and characters in the file.
+**Explanation:**
+First I created a sample **text** file `sample.txt` with two lines of content using `echo -e` and output redirection. Then I ran the script with `sample.txt` as the argument. The script printed `File analysis:` followed by the `wc` output showing the number of lines, words, and characters, which verifies the file-handling part.
 
-text
-Command:
+---
+
+## Step 10: Testing with a directory
+
+```bash
+mkdir testdir
+touch testdir/a.txt testdir/b.txt testdir/c.c
 ./analyze.sh testdir
+```
 
-Explanation:
-This time I gave a directory name. The script detects it with -d and uses find and wc -l to print the total number of files and the number of .txt files inside that directory.
+**Explanation:**
+I created a directory named `testdir` and added two `.txt` files and one `.c` file inside it. Running the script with `testdir` printed `Directory analysis:`, the total number of files as `3`, and the number of text files as `2`, confirming that the directory and `.txt` counting logic works as expected.
 
-text
-Command:
+---
+
+## Step 11: Testing with a non‑existent path
+
+```bash
 ./analyze.sh nothing_here
+```
 
-Explanation:
-I used a path that does not exist. The script finds that it is neither a file nor a directory and prints an error message saying the path does not exist.
+**Explanation:**
+I ran the script with a path that does not exist. The script responded with `Error: Path does not exist.` and exited, which shows that it correctly handles invalid or missing paths.
 
