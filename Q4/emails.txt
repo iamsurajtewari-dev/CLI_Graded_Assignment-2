@@ -1,0 +1,10 @@
+anita123@example.com
+rahul@test.com
+bad-email
+user_1@domain.org
+1234@abc.com
+john@site.com
+john@site.com
+name@site
+abc@xyz.com
+

@@ -1,0 +1,4 @@
+bad-email
+user_1@domain.org
+name@site
+
