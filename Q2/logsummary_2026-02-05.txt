@@ -1,0 +1,11 @@
+Log Summary Report
+Generated on: 2026-02-05
+Source file: sample.log
+
+Total log entries: 4
+INFO messages: 1
+WARNING messages: 1
+ERROR messages: 2
+
+Most recent ERROR message:
+2025-01-12 10:17:10 ERROR Network timeout
